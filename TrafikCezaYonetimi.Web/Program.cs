@@ -20,6 +20,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IAracService, AracService>();
 builder.Services.AddScoped<ICezaService, CezaService>();
+builder.Services.AddScoped<IOnayService, OnayService>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
