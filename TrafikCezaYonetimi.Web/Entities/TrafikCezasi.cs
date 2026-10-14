@@ -5,6 +5,7 @@ namespace TrafikCezaYonetimi.Web.Entities;
 
 public class TrafikCezasi
 {
+    // TrafikCezasi entity'si, trafik cezalarının temel bilgilerini ve ilişkili araç ve kullanıcı bilgilerini temsil eder   
     public int Id { get; set; }
     public string TutanakNo { get; set; } = string.Empty;
     public DateTime CezaTarihi { get; set; }

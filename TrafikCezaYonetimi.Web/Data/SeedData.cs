@@ -8,6 +8,7 @@ public static class SeedData
 {
     private const string VarsayilanSifre = "Test123!";
 
+   // Veritabanını başlatır, gerekli tabloları oluşturur ve varsayılan kullanıcıları ve rolleri ekler
     public static async Task InitializeAsync(IServiceProvider services)
     {
         var context = services.GetRequiredService<ApplicationDbContext>();

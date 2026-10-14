@@ -10,7 +10,7 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-
+    // Uygulamanın tabloları (Identity tabloları IdentityDbContext'ten miras gelir)
     public DbSet<Arac> Araclar => Set<Arac>();
     public DbSet<TrafikCezasi> TrafikCezalari => Set<TrafikCezasi>();
     public DbSet<OnayGecmisi> OnayGecmisleri => Set<OnayGecmisi>();

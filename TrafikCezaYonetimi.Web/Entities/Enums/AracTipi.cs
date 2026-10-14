@@ -4,6 +4,8 @@ namespace TrafikCezaYonetimi.Web.Entities.Enums;
 
 public enum AracTipi
 {
+    // AracTipi enum'ı, araçların tiplerini temsil eder ve her tip için bir görünür ad sağlar.
+    
     [Display(Name = "Binek")]
     Binek = 1,
 

@@ -4,6 +4,8 @@ namespace TrafikCezaYonetimi.Web.Entities.Enums;
 
 public enum IslemTipi
 {
+    // IslemTipi enum'ı, işlemlerin tiplerini temsil eder ve her tip için bir görünür ad sağlar.
+    
     [Display(Name = "Oluşturuldu")]
     Olusturuldu = 1,
 

@@ -17,6 +17,7 @@ public class CezaService : ICezaService
         _context = context;
     }
 
+// TumunuGetirAsync, veritabanındaki tüm cezaları getirir ve oluşturulma tarihlerine göre sıralar.
     public async Task<List<TrafikCezasi>> TumunuGetirAsync()
     {
         return await _context.TrafikCezalari
@@ -26,6 +27,7 @@ public class CezaService : ICezaService
             .ToListAsync();
     }
 
+// BekleyenleriGetirAsync, kullanıcının onaylayabileceği veya kendisinin oluşturduğu ve onaya gönderilebilecek cezaları getirir.    
     public async Task<List<TrafikCezasi>> BekleyenleriGetirAsync(ClaimsPrincipal kullanici)
     {
         var kullaniciId = kullanici.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -40,7 +42,7 @@ public class CezaService : ICezaService
             .OrderBy(c => c.OlusturmaTarihi)
             .ToListAsync();
     }
-
+// DurumSayilariGetirAsync, her ceza durumunun sayısını getirir. 
     public async Task<Dictionary<CezaDurumu, int>> DurumSayilariGetirAsync()
     {
         return await _context.TrafikCezalari
@@ -49,6 +51,7 @@ public class CezaService : ICezaService
             .ToDictionaryAsync(x => x.Durum, x => x.Sayi);
     }
 
+// DetayGetirAsync, belirli bir ceza kaydının detaylarını getirir. Bu detaylar arasında araç bilgisi, oluşturan kullanıcı ve onay geçmişi bulunur.
     public async Task<TrafikCezasi?> DetayGetirAsync(int id)
     {
         return await _context.TrafikCezalari
@@ -59,7 +62,7 @@ public class CezaService : ICezaService
                 .ThenInclude(g => g.Kullanici)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
-
+// EkleAsync, yeni bir ceza kaydı ekler. Form verilerini doğrular ve ceza kaydını oluşturur. Oluşturulan ceza kaydı için onay geçmişi de eklenir.
     public async Task<Sonuc> EkleAsync(CezaFormViewModel form, string kullaniciId)
     {
         var dogrulama = await DogrulaAsync(form, haricTutulacakCezaId: null);
@@ -95,7 +98,7 @@ public class CezaService : ICezaService
 
         return Sonuc.Basarili();
     }
-
+// GuncelleAsync, mevcut bir ceza kaydını günceller. Form verilerini doğrular ve ceza kaydını günceller. 
     public async Task<Sonuc> GuncelleAsync(CezaFormViewModel form, string kullaniciId)
     {
         var ceza = await _context.TrafikCezalari.FirstOrDefaultAsync(c => c.Id == form.Id);
@@ -122,7 +125,7 @@ public class CezaService : ICezaService
         await _context.SaveChangesAsync();
         return Sonuc.Basarili();
     }
-
+// DogrulaAsync, ceza form verilerini doğrular. Araç varlığını, ceza tarihinin geçerliliğini ve tutanak numarasının benzersizliğini kontrol eder.
     private async Task<Sonuc> DogrulaAsync(CezaFormViewModel form, int? haricTutulacakCezaId)
     {
         if (!await _context.Araclar.AnyAsync(a => a.Id == form.AracId))
@@ -143,6 +146,7 @@ public class CezaService : ICezaService
         return Sonuc.Basarili();
     }
 
+// TutanakNoNormalizeEt, tutanak numarasını normalize eder; boşlukları kaldırır ve büyük harfe çevirir.
     private static string TutanakNoNormalizeEt(string tutanakNo)
     {
         return tutanakNo.Trim().ToUpperInvariant();

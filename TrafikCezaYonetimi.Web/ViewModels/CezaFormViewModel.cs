@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TrafikCezaYonetimi.Web.ViewModels;
-
+// CezaFormViewModel, ceza ekleme ve düzenleme işlemlerinde kullanılan form verilerini temsil eder. Bu model, ceza bilgilerini toplar ve doğrulama kurallarını içerir.  
 public class CezaFormViewModel
 {
     public int? Id { get; set; }

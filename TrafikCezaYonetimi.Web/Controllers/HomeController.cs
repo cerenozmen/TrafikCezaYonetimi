@@ -14,7 +14,7 @@ public class HomeController : Controller
     {
         _cezaService = cezaService;
     }
-
+    // Ana sayfa, kullanıcı giriş yaptıysa ceza durum sayıları ve bekleyen ceza sayısını gösterir
     public async Task<IActionResult> Index()
     {
         var model = new AnaSayfaViewModel();

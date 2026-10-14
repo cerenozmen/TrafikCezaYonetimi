@@ -6,6 +6,7 @@ namespace TrafikCezaYonetimi.Web.Data.Configurations;
 
 public class TrafikCezasiConfiguration : IEntityTypeConfiguration<TrafikCezasi>
 {
+    // TrafikCezasi entity'sinin veritabanı yapılandırmasını yapar
     public void Configure(EntityTypeBuilder<TrafikCezasi> builder)
     {
         builder.ToTable("TrafikCezalari");

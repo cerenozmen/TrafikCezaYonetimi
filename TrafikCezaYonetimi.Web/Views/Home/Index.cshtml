@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Ana Sayfa";
 }
-
+// Ana sayfa, kullanıcıların sisteme giriş yaptıktan sonra karşılaştığı ilk sayfadır. Kullanıcıya bekleyen cezalar ve duruma göre ceza sayıları gibi özet bilgiler sunar. Giriş yapmamış kullanıcılar için sistemin amacı ve giriş yapma yönlendirmesi gösterilir.  
 @if (User.Identity?.IsAuthenticated != true)
 {
     <div class="text-center py-5">

@@ -25,6 +25,8 @@ public class CezaController : Controller
 
     private string KullaniciId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
+
+    // Ceza listesi, filtreye göre bekleyen veya tüm cezaları gösterir
    public async Task<IActionResult> Index(string? filtre)
 {
     var sadeceBekleyenler = filtre == "bekleyen";
@@ -38,7 +40,9 @@ public class CezaController : Controller
         Cezalar = cezalar,
         SadeceBekleyenler = sadeceBekleyenler
     });
-}
+} 
+
+    // Ceza detay sayfası, cezanın tüm bilgilerini ve onay durumunu gösterir
 
     public async Task<IActionResult> Detay(int id)
     {
@@ -57,7 +61,7 @@ public class CezaController : Controller
         return View(detay);
     }
 
-    // ---------- Ekleme ve düzenleme ----------
+    // Ceza ekleme ve düzenleme işlemleri, sadece Personel rolüne sahip kullanıcılar tarafından yapılabilir
 
     [HttpGet]
     [Authorize(Roles = Roller.Personel)]
@@ -142,7 +146,7 @@ public class CezaController : Controller
         return RedirectToAction(nameof(Detay), new { id = cezaForm.Id });
     }
 
-    // ---------- Onay akışı ----------
+    // Ceza onay süreci işlemleri, sadece Onaylayici rolüne sahip kullanıcılar tarafından yapılabilir
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -171,7 +175,7 @@ public class CezaController : Controller
         return RedirectToAction(nameof(Detay), new { id });
     }
 
-    // ---------- Yardımcılar ----------
+    // Sonuç mesajlarını TempData üzerinden kullanıcıya iletmek için kullanılan yardımcı metot
 
     private void SonucMesajiniAyarla(Sonuc sonuc, string basariMesaji)
     {

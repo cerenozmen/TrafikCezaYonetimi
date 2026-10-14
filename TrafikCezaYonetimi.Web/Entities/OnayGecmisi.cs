@@ -5,6 +5,7 @@ namespace TrafikCezaYonetimi.Web.Entities;
 
 public class OnayGecmisi
 {
+    // OnayGecmisi entity'si, bir trafik cezasının onay geçmişini temsil eder ve hangi kullanıcı tarafından hangi işlem yapıldığını kaydeder    
     public int Id { get; set; }
 
     public int TrafikCezasiId { get; set; }

@@ -2,6 +2,8 @@ namespace TrafikCezaYonetimi.Web.Common;
 
 public class Sonuc
 {
+    // İşlemin başarılı olup olmadığını gösterir
+    // Hata mesajı varsa, işlemin neden başarısız olduğunu açıklar
     public bool BasariliMi { get; }
     public string? HataMesaji { get; }
 

@@ -5,6 +5,7 @@ namespace TrafikCezaYonetimi.Web.Common;
 
 public static class EnumExtensions
 {
+    // Enum değerinin DisplayAttribute ile belirtilmiş adını döndürür 
     public static string GorunenAd(this Enum deger)
     {
         var uye = deger.GetType().GetMember(deger.ToString()).FirstOrDefault();

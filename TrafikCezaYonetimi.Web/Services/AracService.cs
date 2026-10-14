@@ -15,7 +15,9 @@ public class AracService : IAracService
     {
         _context = context;
     }
-
+    
+    // TumunuGetirAsync, veritabanındaki tüm araçları getirir ve plakalarına göre sıralar.
+    
     public async Task<List<Arac>> TumunuGetirAsync()
     {
         return await _context.Araclar
@@ -23,7 +25,8 @@ public class AracService : IAracService
             .OrderBy(a => a.Plaka)
             .ToListAsync();
     }
-
+    
+    // EkleAsync, yeni bir araç ekler. Plaka zaten kayıtlıysa hata döner.
     public async Task<Sonuc> EkleAsync(AracFormViewModel model)
     {
         var plaka = PlakaNormalizeEt(model.Plaka);
@@ -46,6 +49,7 @@ public class AracService : IAracService
         return Sonuc.Basarili();
     }
 
+// PlakaNormalizeEt, plakayı normalize eder; boşlukları kaldırır ve büyük harfe çevirir.
     private static string PlakaNormalizeEt(string plaka)
     {
         return Regex.Replace(plaka, @"\s+", "").ToUpperInvariant();

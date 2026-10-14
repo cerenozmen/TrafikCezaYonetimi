@@ -6,6 +6,7 @@ public static class CezaDurumuExtensions
 {
     public static string BadgeSinifi(this CezaDurumu durum)
     {
+        // Ceza durumlarının renkleri 
         return durum switch
         {
             CezaDurumu.Yeni => "bg-secondary",

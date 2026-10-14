@@ -6,6 +6,7 @@ public static class IslemTipiExtensions
 {
     public static string BadgeSinifi(this IslemTipi islemTipi)
     {
+        // İşlem tiplerinin renkleri
         return islemTipi switch
         {
             IslemTipi.Olusturuldu => "bg-secondary",

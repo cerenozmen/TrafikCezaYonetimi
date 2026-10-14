@@ -15,11 +15,14 @@ public class AracController : Controller
         _aracService = aracService;
     }
 
+    // Araçların listelendiği sayfa
     public async Task<IActionResult> Index()
     {
         var araclar = await _aracService.TumunuGetirAsync();
         return View(araclar);
     }
+
+    // Araç ekleme formunu gösterir
 
     [HttpGet]
     public IActionResult Ekle()
@@ -27,6 +30,7 @@ public class AracController : Controller
         return View(new AracFormViewModel());
     }
 
+  // Araç ekleme formunu işler
    [HttpPost]
 [ValidateAntiForgeryToken]
 public async Task<IActionResult> Ekle(AracFormViewModel aracForm)

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using TrafikCezaYonetimi.Web.Entities.Enums;
 
 namespace TrafikCezaYonetimi.Web.ViewModels;
-
+// AracFormViewModel, araç ekleme ve düzenleme işlemlerinde kullanılan form verilerini temsil eder. Bu model, araç bilgilerini toplar ve doğrulama kurallarını içerir.  
 public class AracFormViewModel
 {
     [Display(Name = "Plaka")]

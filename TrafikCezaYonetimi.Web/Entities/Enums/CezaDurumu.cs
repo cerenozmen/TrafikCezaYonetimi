@@ -4,6 +4,8 @@ namespace TrafikCezaYonetimi.Web.Entities.Enums;
 
 public enum CezaDurumu
 {
+    // CezaDurumu enum'ı, trafik cezalarının durumlarını temsil eder ve her durum için bir görünür ad sağlar.
+    
     [Display(Name = "Yeni")]
     Yeni = 1,
 

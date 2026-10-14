@@ -1,5 +1,6 @@
 @model int
 @{
+    // Hata sayfası, kullanıcıların karşılaştığı hataları anlamalarına yardımcı olur. Hata koduna göre uygun başlık ve mesaj görüntülenir. Kullanıcılar ana sayfaya dönerek işlemlerine devam edebilirler.  
     var (baslik, mesaj) = Model switch
     {
         404 => ("Sayfa bulunamadı", "Aradığınız sayfa veya kayıt bulunamadı. Adres hatalı yazılmış olabilir."),

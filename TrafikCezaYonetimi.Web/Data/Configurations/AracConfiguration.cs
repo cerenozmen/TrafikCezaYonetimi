@@ -6,6 +6,7 @@ namespace TrafikCezaYonetimi.Web.Data.Configurations;
 
 public class AracConfiguration : IEntityTypeConfiguration<Arac>
 {
+    // Arac entity'sinin veritabanı yapılandırmasını yapar
     public void Configure(EntityTypeBuilder<Arac> builder)
     {
         builder.ToTable("Araclar");

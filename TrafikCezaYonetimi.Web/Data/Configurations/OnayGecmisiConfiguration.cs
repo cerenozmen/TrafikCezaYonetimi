@@ -6,8 +6,10 @@ namespace TrafikCezaYonetimi.Web.Data.Configurations;
 
 public class OnayGecmisiConfiguration : IEntityTypeConfiguration<OnayGecmisi>
 {
+    // OnayGecmisi entity'sinin veritabanı yapılandırmasını yapar
     public void Configure(EntityTypeBuilder<OnayGecmisi> builder)
     {
+        
         builder.ToTable("OnayGecmisleri");
 
         builder.Property(g => g.Aciklama).HasMaxLength(500);
