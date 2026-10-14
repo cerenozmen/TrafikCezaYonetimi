@@ -23,4 +23,5 @@ public class TrafikCezasi
     public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 
     public ICollection<OnayGecmisi> OnayGecmisleri { get; set; } = new List<OnayGecmisi>();
+    public bool DuzenlenebilirMi() => Durum is CezaDurumu.Yeni or CezaDurumu.Reddedildi;
 }

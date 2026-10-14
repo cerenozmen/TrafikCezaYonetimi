@@ -1,0 +1,44 @@
+@model CezaFormViewModel
+
+<input type="hidden" asp-for="Id" />
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+@if (!Model.AracSecenekleri.Any())
+{
+    <div class="alert alert-warning">
+        Sistemde kayıtlı araç yok. Ceza girebilmek için önce
+        <a asp-controller="Arac" asp-action="Ekle">araç ekleyin</a>.
+    </div>
+}
+
+<div class="mb-3">
+    <label asp-for="AracId" class="form-label"></label>
+    <select asp-for="AracId" asp-items="Model.AracSecenekleri" class="form-select">
+        <option value="">Seçiniz</option>
+    </select>
+    <span asp-validation-for="AracId" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="TutanakNo" class="form-label"></label>
+    <input asp-for="TutanakNo" class="form-control" />
+    <span asp-validation-for="TutanakNo" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="CezaTarihi" class="form-label"></label>
+    <input asp-for="CezaTarihi" class="form-control" />
+    <span asp-validation-for="CezaTarihi" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Tutar" class="form-label"></label>
+    <input asp-for="Tutar" type="number" step="0.01" min="0.01" class="form-control" />
+    <span asp-validation-for="Tutar" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="IhlalAciklamasi" class="form-label"></label>
+    <textarea asp-for="IhlalAciklamasi" rows="3" class="form-control"></textarea>
+    <span asp-validation-for="IhlalAciklamasi" class="text-danger"></span>
+</div>

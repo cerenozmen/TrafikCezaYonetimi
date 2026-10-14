@@ -1,0 +1,49 @@
+@model CezaDetayViewModel
+@{
+    var ceza = Model.Ceza;
+    ViewData["Title"] = $"Ceza {ceza.TutanakNo}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">
+        Ceza @ceza.TutanakNo
+        <span class="badge @ceza.Durum.BadgeSinifi() fs-6 align-middle">@ceza.Durum.GorunenAd()</span>
+    </h1>
+    <div>
+        @if (Model.DuzenleyebilirMi)
+        {
+            <a asp-action="Duzenle" asp-route-id="@ceza.Id" class="btn btn-outline-primary">Düzenle</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Listeye Dön</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Araç</dt>
+            <dd class="col-sm-9">
+                @ceza.Arac.Plaka - @ceza.Arac.Marka @ceza.Arac.Model
+                (@ceza.Arac.AracTipi.GorunenAd())
+            </dd>
+
+            <dt class="col-sm-3">Ceza Tarihi</dt>
+            <dd class="col-sm-9">@ceza.CezaTarihi.ToString("dd.MM.yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Tutar</dt>
+            <dd class="col-sm-9">@ceza.Tutar.ParaFormatla()</dd>
+
+            <dt class="col-sm-3">İhlal Açıklaması</dt>
+            <dd class="col-sm-9">@ceza.IhlalAciklamasi</dd>
+
+            <dt class="col-sm-3">Oluşturan</dt>
+            <dd class="col-sm-9">@ceza.OlusturanKullanici.Email</dd>
+
+            <dt class="col-sm-3">Oluşturma Tarihi</dt>
+            <dd class="col-sm-9">@ceza.OlusturmaTarihi.ToString("dd.MM.yyyy HH:mm")</dd>
+        </dl>
+    </div>
+</div>
+
+@* Adım 6: Onay / Ret butonları buraya gelecek *@
+@* Adım 7: Onay geçmişi buraya gelecek *@

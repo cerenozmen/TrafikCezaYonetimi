@@ -1,0 +1,49 @@
+@model List<TrafikCezasi>
+@{
+    ViewData["Title"] = "Trafik Cezaları";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Trafik Cezaları</h1>
+    @if (User.IsInRole(Roller.Personel))
+    {
+        <a asp-action="Ekle" class="btn btn-primary">Yeni Ceza</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Henüz kayıtlı ceza yok.</div>
+}
+else
+{
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Tutanak No</th>
+                <th>Plaka</th>
+                <th>Ceza Tarihi</th>
+                <th class="text-end">Tutar</th>
+                <th>Durum</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ceza in Model)
+            {
+                <tr>
+                    <td>@ceza.TutanakNo</td>
+                    <td><strong>@ceza.Arac.Plaka</strong></td>
+                    <td>@ceza.CezaTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td class="text-end">@ceza.Tutar.ParaFormatla()</td>
+                    <td>
+                        <span class="badge @ceza.Durum.BadgeSinifi()">@ceza.Durum.GorunenAd()</span>
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Detay" asp-route-id="@ceza.Id" class="btn btn-sm btn-outline-primary">Detay</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
