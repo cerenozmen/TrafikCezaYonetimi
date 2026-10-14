@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TrafikCezaYonetimi.Web.Common;
 using TrafikCezaYonetimi.Web.Constants;
 using TrafikCezaYonetimi.Web.Services;
 using TrafikCezaYonetimi.Web.ViewModels;
@@ -13,11 +14,13 @@ public class CezaController : Controller
 {
     private readonly ICezaService _cezaService;
     private readonly IAracService _aracService;
+    private readonly IOnayService _onayService;
 
-    public CezaController(ICezaService cezaService, IAracService aracService)
+    public CezaController(ICezaService cezaService, IAracService aracService, IOnayService onayService)
     {
         _cezaService = cezaService;
         _aracService = aracService;
+        _onayService = onayService;
     }
 
     private string KullaniciId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -37,11 +40,15 @@ public class CezaController : Controller
         var detay = new CezaDetayViewModel
         {
             Ceza = ceza,
-            DuzenleyebilirMi = ceza.OlusturanKullaniciId == KullaniciId && ceza.DuzenlenebilirMi()
+            DuzenleyebilirMi = ceza.OlusturanKullaniciId == KullaniciId && ceza.DuzenlenebilirMi(),
+            OnayaGonderebilirMi = OnayAkisi.OnayaGonderebilirMi(ceza, User),
+            KararVerebilirMi = OnayAkisi.KararVerebilirMi(ceza, User)
         };
 
         return View(detay);
     }
+
+    // ---------- Ekleme ve düzenleme ----------
 
     [HttpGet]
     [Authorize(Roles = Roller.Personel)]
@@ -124,6 +131,45 @@ public class CezaController : Controller
 
         TempData["Basari"] = "Ceza kaydı güncellendi.";
         return RedirectToAction(nameof(Detay), new { id = cezaForm.Id });
+    }
+
+    // ---------- Onay akışı ----------
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> OnayaGonder(int id, byte[]? rowVersion)
+    {
+        var sonuc = await _onayService.OnayaGonderAsync(id, rowVersion ?? Array.Empty<byte>(), User);
+        SonucMesajiniAyarla(sonuc, "Ceza onaya gönderildi.");
+        return RedirectToAction(nameof(Detay), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Onayla(int id, byte[]? rowVersion, string? aciklama)
+    {
+        var sonuc = await _onayService.OnaylaAsync(id, rowVersion ?? Array.Empty<byte>(), User, aciklama);
+        SonucMesajiniAyarla(sonuc, "Ceza onaylandı.");
+        return RedirectToAction(nameof(Detay), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Reddet(int id, byte[]? rowVersion, string? retNedeni)
+    {
+        var sonuc = await _onayService.ReddetAsync(id, rowVersion ?? Array.Empty<byte>(), User, retNedeni);
+        SonucMesajiniAyarla(sonuc, "Ceza reddedildi.");
+        return RedirectToAction(nameof(Detay), new { id });
+    }
+
+    // ---------- Yardımcılar ----------
+
+    private void SonucMesajiniAyarla(Sonuc sonuc, string basariMesaji)
+    {
+        if (sonuc.BasariliMi)
+            TempData["Basari"] = basariMesaji;
+        else
+            TempData["Hata"] = sonuc.HataMesaji;
     }
 
     private async Task AracSecenekleriniDoldurAsync(CezaFormViewModel form)
