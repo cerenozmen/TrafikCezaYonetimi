@@ -1,4 +1,4 @@
-@model List<TrafikCezasi>
+@model CezaListeViewModel
 @{
     ViewData["Title"] = "Trafik Cezaları";
 }
@@ -11,9 +11,26 @@
     }
 </div>
 
-@if (!Model.Any())
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link @(Model.SadeceBekleyenler ? "" : "active")" asp-action="Index">
+            Tüm Cezalar
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.SadeceBekleyenler ? "active" : "")" asp-action="Index" asp-route-filtre="bekleyen">
+            İşlem Bekleyenler
+        </a>
+    </li>
+</ul>
+
+@if (!Model.Cezalar.Any())
 {
-    <div class="alert alert-info">Henüz kayıtlı ceza yok.</div>
+    <div class="alert alert-info">
+        @(Model.SadeceBekleyenler
+            ? "Şu anda sizden işlem bekleyen bir ceza yok."
+            : "Henüz kayıtlı ceza yok.")
+    </div>
 }
 else
 {
@@ -29,7 +46,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var ceza in Model)
+            @foreach (var ceza in Model.Cezalar)
             {
                 <tr>
                     <td>@ceza.TutanakNo</td>

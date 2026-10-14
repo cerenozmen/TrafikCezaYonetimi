@@ -21,6 +21,13 @@ public static class OnayAkisi
         [CezaDurumu.FinansOnayinda] = CezaDurumu.Tamamlandi
     };
 
+    // Hangi durumlardaki ceza onaya gönderilebilir?
+    public static readonly CezaDurumu[] OnayaGonderilebilirDurumlar =
+    {
+        CezaDurumu.Yeni,
+        CezaDurumu.Reddedildi
+    };
+
     public static bool KararVerebilirMi(TrafikCezasi ceza, ClaimsPrincipal kullanici)
     {
         return KararVerecekRoller.TryGetValue(ceza.Durum, out var rol)
@@ -29,12 +36,21 @@ public static class OnayAkisi
 
     public static bool OnayaGonderebilirMi(TrafikCezasi ceza, ClaimsPrincipal kullanici)
     {
-        return ceza.Durum is CezaDurumu.Yeni or CezaDurumu.Reddedildi
+        return OnayaGonderilebilirDurumlar.Contains(ceza.Durum)
                && ceza.OlusturanKullaniciId == kullanici.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
     public static CezaDurumu OnaySonrasiDurum(CezaDurumu mevcutDurum)
     {
         return OnaySonrasiDurumlar[mevcutDurum];
+    }
+
+    // Kullanıcının karar verebileceği durumlar (örneğin Yönetici için: YoneticiOnayinda)
+    public static List<CezaDurumu> KararVerebilecegiDurumlar(ClaimsPrincipal kullanici)
+    {
+        return KararVerecekRoller
+            .Where(kayit => kullanici.IsInRole(kayit.Value))
+            .Select(kayit => kayit.Key)
+            .ToList();
     }
 }

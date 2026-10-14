@@ -25,11 +25,20 @@ public class CezaController : Controller
 
     private string KullaniciId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-    public async Task<IActionResult> Index()
+   public async Task<IActionResult> Index(string? filtre)
+{
+    var sadeceBekleyenler = filtre == "bekleyen";
+
+    var cezalar = sadeceBekleyenler
+        ? await _cezaService.BekleyenleriGetirAsync(User)
+        : await _cezaService.TumunuGetirAsync();
+
+    return View(new CezaListeViewModel
     {
-        var cezalar = await _cezaService.TumunuGetirAsync();
-        return View(cezalar);
-    }
+        Cezalar = cezalar,
+        SadeceBekleyenler = sadeceBekleyenler
+    });
+}
 
     public async Task<IActionResult> Detay(int id)
     {

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using TrafikCezaYonetimi.Web.Common;
 using TrafikCezaYonetimi.Web.Data;
@@ -23,6 +24,29 @@ public class CezaService : ICezaService
             .Include(c => c.Arac)
             .OrderByDescending(c => c.OlusturmaTarihi)
             .ToListAsync();
+    }
+
+    public async Task<List<TrafikCezasi>> BekleyenleriGetirAsync(ClaimsPrincipal kullanici)
+    {
+        var kullaniciId = kullanici.FindFirstValue(ClaimTypes.NameIdentifier);
+        var kararDurumlari = OnayAkisi.KararVerebilecegiDurumlar(kullanici);
+        var gonderilebilirDurumlar = OnayAkisi.OnayaGonderilebilirDurumlar;
+
+        return await _context.TrafikCezalari
+            .AsNoTracking()
+            .Include(c => c.Arac)
+            .Where(c => kararDurumlari.Contains(c.Durum)
+                        || (c.OlusturanKullaniciId == kullaniciId && gonderilebilirDurumlar.Contains(c.Durum)))
+            .OrderBy(c => c.OlusturmaTarihi)
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<CezaDurumu, int>> DurumSayilariGetirAsync()
+    {
+        return await _context.TrafikCezalari
+            .GroupBy(c => c.Durum)
+            .Select(g => new { Durum = g.Key, Sayi = g.Count() })
+            .ToDictionaryAsync(x => x.Durum, x => x.Sayi);
     }
 
     public async Task<TrafikCezasi?> DetayGetirAsync(int id)
