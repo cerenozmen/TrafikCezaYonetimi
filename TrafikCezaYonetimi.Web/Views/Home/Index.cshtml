@@ -1,8 +1,47 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model AnaSayfaViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <div class="text-center py-5">
+        <h1 class="display-6 mb-3">Trafik Ceza Yönetimi</h1>
+        <p class="lead text-muted mb-4">
+            Araçlara ait trafik cezalarını kaydedin, onay sürecini yönetin
+            ve tüm işlemlerin geçmişini takip edin.
+        </p>
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">Giriş Yap</a>
+    </div>
+}
+else
+{
+    <h1 class="h3 mb-4">Hoş geldiniz</h1>
+
+    <div class="card border-primary mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <div class="text-muted">Sizden işlem bekleyen ceza</div>
+                <div class="display-6 fw-semibold">@Model.BekleyenSayisi</div>
+            </div>
+            <a asp-controller="Ceza" asp-action="Index" asp-route-filtre="bekleyen" class="btn btn-primary">
+                Bekleyenleri Gör
+            </a>
+        </div>
+    </div>
+
+    <h2 class="h5 mb-3">Duruma Göre Cezalar</h2>
+    <div class="row g-3">
+        @foreach (var durum in Enum.GetValues<CezaDurumu>())
+        {
+            <div class="col-6 col-md-4 col-lg">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <span class="badge @durum.BadgeSinifi() mb-2">@durum.GorunenAd()</span>
+                        <div class="h3 mb-0">@Model.DurumSayilari.GetValueOrDefault(durum)</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

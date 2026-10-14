@@ -1,34 +1,45 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using TrafikCezaYonetimi.Web.Data;
 using TrafikCezaYonetimi.Web.Services;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// Veritabanı
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Kimlik ve roller
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Home/YetkisizErisim";
+});
+
 builder.Services.AddControllersWithViews();
 
+// Uygulama servisleri
 builder.Services.AddScoped<IAracService, AracService>();
 builder.Services.AddScoped<ICezaService, CezaService>();
 builder.Services.AddScoped<IOnayService, OnayService>();
 
 var app = builder.Build();
+
+// Başlangıç verisi (roller ve test kullanıcıları)
 using (var scope = app.Services.CreateScope())
 {
     await SeedData.InitializeAsync(scope.ServiceProvider);
 }
 
-// Configure the HTTP request pipeline.
+// Hata yönetimi
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -36,9 +47,12 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseStatusCodePagesWithReExecute("/Home/DurumKodu", "?kod={0}");
+
+// Sayı ve tarihlerin dilden bağımsız okunması
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
     DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture),
@@ -47,6 +61,19 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 });
 
 app.UseHttpsRedirection();
+
+// Kullanıcılar yönetim tarafından oluşturulur; dışarıdan kayıt kapalı
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/Identity/Account/Register"))
+    {
+        context.Response.Redirect("/Identity/Account/Login");
+        return;
+    }
+
+    await next();
+});
+
 app.UseRouting();
 
 app.UseAuthorization();

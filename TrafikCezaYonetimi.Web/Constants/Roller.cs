@@ -7,4 +7,10 @@ public static class Roller
     public const string Finans = "Finans";
 
     public static readonly string[] Tumu = { Personel, Yonetici, Finans };
+
+    public static string GorunenAd(string rol) => rol switch
+    {
+        Yonetici => "Yönetici",
+        _ => rol
+    };
 }
