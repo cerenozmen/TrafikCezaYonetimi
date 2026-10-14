@@ -26,12 +26,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                             <a class="nav-link text-dark" asp-controller="Arac" asp-action="Index">Araçlar</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+    @if (TempData["Basari"] is string basariMesaji)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @basariMesaji
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+@if (TempData["Hata"] is string hataMesaji)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @hataMesaji
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

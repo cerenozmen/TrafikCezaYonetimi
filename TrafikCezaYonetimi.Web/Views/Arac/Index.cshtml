@@ -1,0 +1,40 @@
+@model List<Arac>
+@{
+    ViewData["Title"] = "Araçlar";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Araçlar</h1>
+    <a asp-action="Ekle" class="btn btn-primary">Yeni Araç</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Henüz kayıtlı araç yok.</div>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Plaka</th>
+                <th>Araç Tipi</th>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Kayıt Tarihi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var arac in Model)
+            {
+                <tr>
+                    <td><strong>@arac.Plaka</strong></td>
+                    <td>@arac.AracTipi.GorunenAd()</td>
+                    <td>@arac.Marka</td>
+                    <td>@arac.Model</td>
+                    <td>@arac.OlusturmaTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
